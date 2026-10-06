@@ -161,14 +161,19 @@ class _ScanScreenState extends State<ScanScreen>
     }
   }
 
+  // bool _isGaramMug(BluetoothDevice device) {
+  //   final name = device.name?.trim().toLowerCase() ?? '';
+  //
+  //   if (name.isEmpty) return false;
+  //
+  //   return name.startsWith('garam_mug') ||
+  //       name.startsWith('garam mug') ||
+  //       name.startsWith('device_1');
+  // }
   bool _isGaramMug(BluetoothDevice device) {
     final name = device.name?.trim().toLowerCase() ?? '';
 
-    if (name.isEmpty) return false;
-
-    return name.startsWith('garam_mug') ||
-        name.startsWith('garam mug') ||
-        name.startsWith('device_1');
+    return name.startsWith('garamug_');
   }
 
   String _deviceName(BluetoothDevice device) {

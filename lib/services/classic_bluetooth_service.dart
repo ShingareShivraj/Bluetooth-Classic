@@ -747,17 +747,19 @@ class ClassicBluetoothService extends ChangeNotifier {
 
     final powerValue = enabled ? 1 : 0;
 
-    // ESP32 expects:
-    // H:1 = Heater ON
-    // H:0 = Heater OFF
-    final command = 'H:$powerValue';
+    // ESP32 expects JSON:
+    // {"h":1} = Heater ON
+    // {"h":0} = Heater OFF
+    final command = jsonEncode({
+      'h': powerValue,
+    });
 
     print('');
-    print('========== POWER COMMAND ===========');
+    print('========== POWER JSON COMMAND =========');
     print('ENABLED: $enabled');
     print('POWER VALUE: $powerValue');
     print('COMMAND CREATED: $command');
-    print('====================================');
+    print('========================================');
 
     final success = await sendCommand(
       model,
@@ -765,16 +767,15 @@ class ClassicBluetoothService extends ChangeNotifier {
     );
 
     print('');
-    print('========== POWER RESULT ============');
+    print('========== POWER RESULT ================');
     print('SUCCESS: $success');
-    print('====================================');
+    print('========================================');
 
-    // Do not update model.power here. The ESP32 response is the source of
-    // truth and _parseTextStatus() will update it from H:1 or H:0.
+    // Do not update model.power here.
+    // Wait for the ESP32 response as the source of truth.
 
     return success;
   }
-
 
   Future<bool> setTargetTemperature(
       ClassicDeviceModel model,
@@ -783,15 +784,20 @@ class ClassicBluetoothService extends ChangeNotifier {
 
     final temperature = value.round();
 
-    // ESP32 expects TAR:<temperature>
-    // Example: TAR:47
-    final command = 'TAR:$temperature';
+    // ESP32 expects JSON:
+    // {"tar":47}
+    // {"tar":52}
+    // {"tar":57}
+    // {"tar":62}
+    final command = jsonEncode({
+      'tar': temperature,
+    });
 
     print('');
-    print('========== TEMPERATURE COMMAND =====');
+    print('========== TEMPERATURE JSON COMMAND =====');
     print('TARGET TEMPERATURE: $temperature');
     print('COMMAND CREATED: $command');
-    print('====================================');
+    print('=========================================');
 
     final success = await sendCommand(
       model,
@@ -799,16 +805,15 @@ class ClassicBluetoothService extends ChangeNotifier {
     );
 
     print('');
-    print('========== TEMPERATURE RESULT ======');
+    print('========== TEMPERATURE RESULT ===========');
     print('SUCCESS: $success');
-    print('====================================');
+    print('=========================================');
 
-    // Do not update model.setTemperature here. Wait for the ESP32 TAR value
-    // so the selected preference always represents confirmed device state.
+    // Do not update model.setTemperature here.
+    // Wait for the ESP32 response as the source of truth.
 
     return success;
   }
-
   Future<bool> disconnectDevice(ClassicDeviceModel model) async {
     try {
       await model.inputSubscription?.cancel();

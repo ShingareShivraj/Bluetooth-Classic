@@ -122,24 +122,26 @@ class DeviceService extends ChangeNotifier {
     return _setPower(enabled);
   }
 
-  Future<bool> togglePower() async {
-    print('');
-    print('========== POWER BUTTON ===========');
-    print('BUTTON PRESSED');
-    print('CURRENT isOn: $isOn');
-    print('CURRENT device.power: ${_selectedDevice?.power}');
-    print('REQUESTED isOn: ${!isOn}');
-    print('===================================');
+  // Future<bool> togglePower() async {
+  //   print('');
+  //   print('========== POWER BUTTON ===========');
+  //   print('BUTTON PRESSED');
+  //   print('CURRENT isOn: $isOn');
+  //   print('CURRENT device.power: ${_selectedDevice?.power}');
+  //   print('REQUESTED isOn: ${!isOn}');
+  //   print('===================================');
+  //
+  //   final result = await _setPower(!isOn);
+  //
+  //   print('');
+  //   print('========== POWER BUTTON RESULT =====');
+  //   print('RESULT: $result');
+  //   print('====================================');
+  //
+  //   return result;
+  // }
 
-    final result = await _setPower(!isOn);
 
-    print('');
-    print('========== POWER BUTTON RESULT =====');
-    print('RESULT: $result');
-    print('====================================');
-
-    return result;
-  }
 
   Future<bool> _setPower(bool enabled) async {
     final device = _selectedDevice;
