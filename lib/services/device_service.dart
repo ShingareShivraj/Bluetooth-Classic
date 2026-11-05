@@ -38,7 +38,7 @@ class DeviceService extends ChangeNotifier {
     _selectedDevice = value;
   }
 
-  // These values come directly from the selected Bluetooth model. They are
+  // These values come directly from the selected Bluetooth models. They are
   // not duplicated inside DeviceService.
   double get temperature => _selectedDevice?.temperature ?? 0;
   int get battery => _selectedDevice?.battery ?? 0;
@@ -58,7 +58,7 @@ class DeviceService extends ChangeNotifier {
   }
 
   // Temporary compatibility setters for the existing Home screen. Each one
-  // forwards to the model, so there is still only one source of truth.
+  // forwards to the models, so there is still only one source of truth.
   set temperature(double value) {
     if (_selectedDevice != null) _selectedDevice!.temperature = value;
   }

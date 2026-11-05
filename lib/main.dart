@@ -6,6 +6,7 @@ import 'screens/splash_screen.dart';
 import 'services/classic_bluetooth_service.dart';
 import 'services/device_service.dart';
 import 'services/theme_service.dart';
+import 'services/auth_service.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -18,6 +19,7 @@ Future<void> main() async {
   runApp(
     MultiProvider(
       providers: [
+        ChangeNotifierProvider<AuthService>(create: (_) => AuthService()),
         ChangeNotifierProvider<ThemeService>.value(
           value: themeService,
         ),

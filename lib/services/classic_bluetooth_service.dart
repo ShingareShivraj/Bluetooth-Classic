@@ -771,7 +771,7 @@ class ClassicBluetoothService extends ChangeNotifier {
     print('SUCCESS: $success');
     print('========================================');
 
-    // Do not update model.power here.
+    // Do not update models.power here.
     // Wait for the ESP32 response as the source of truth.
 
     return success;
@@ -809,7 +809,7 @@ class ClassicBluetoothService extends ChangeNotifier {
     print('SUCCESS: $success');
     print('=========================================');
 
-    // Do not update model.setTemperature here.
+    // Do not update models.setTemperature here.
     // Wait for the ESP32 response as the source of truth.
 
     return success;

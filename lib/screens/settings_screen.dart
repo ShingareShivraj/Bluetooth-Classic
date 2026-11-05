@@ -2,6 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 import '../services/theme_service.dart';
+import '../services/auth_service.dart';
+import '../services/device_service.dart';
+import '../services/classic_bluetooth_service.dart';
+import 'login_screen.dart';
 
 class SettingsScreen extends StatelessWidget {
   const SettingsScreen({super.key});
@@ -188,7 +192,7 @@ class SettingsScreen extends StatelessWidget {
             // Account - ready for future functionality
             const _SectionTitle(
               title: 'Account',
-              subtitle: 'Account and app access will appear here.',
+              subtitle: 'Manage your app access.',
             ),
             const SizedBox(height: 10),
 
@@ -206,12 +210,39 @@ class SettingsScreen extends StatelessWidget {
                     indent: 72,
                     color: theme.dividerColor,
                   ),
-                  _FutureSettingTile(
-                    icon: Icons.logout_rounded,
-                    title: 'Log Out',
-                    subtitle: 'Sign out of your Garam Mug account',
-                    colors: colors,
-                    showChevron: false,
+                  ListTile(
+                    leading: const Icon(Icons.logout_rounded),
+                    title: const Text('Log out'),
+                    subtitle: Text(context.watch<AuthService>().session?.user ?? ''),
+                    onTap: () async {
+                      final auth = context.read<AuthService>();
+                      final device = context.read<DeviceService>();
+                      final bluetooth = context.read<ClassicBluetoothService>();
+                      try {
+                        await bluetooth.stopDiscovery();
+                        final disconnected = await device.disconnectSelected();
+                        if (!disconnected) {
+                          throw Exception('Bluetooth disconnect failed');
+                        }
+                        for (final mug in List.of(bluetooth.connectedDevices)) {
+                          if (!await bluetooth.disconnectDevice(mug)) {
+                            throw Exception('Bluetooth disconnect failed');
+                          }
+                        }
+                        await bluetooth.clearLastConnectedDevice();
+                        await auth.signOut();
+                        if (!context.mounted) return;
+                        Navigator.of(context).pushAndRemoveUntil(
+                          MaterialPageRoute(builder: (_) => const LoginScreen()),
+                              (_) => false,
+                        );
+                      } catch (_) {
+                        if (!context.mounted) return;
+                        ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
+                          content: Text('Could not complete logout. Please try again.'),
+                        ));
+                      }
+                    },
                   ),
                 ],
               ),
